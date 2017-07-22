@@ -1,8 +1,8 @@
 
-emq_plugin_template
+emqttd_kafka_plugin
 ===================
 
-This is a template plugin for the EMQ broker.
+This is a plugin for the EMQ broker that sends all messages received by the broker to kafka.
 
 Plugin Config
 -------------
