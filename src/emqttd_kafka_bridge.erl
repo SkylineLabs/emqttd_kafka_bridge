@@ -98,7 +98,9 @@ on_message_publish(Message = #mqtt_message{pktid   = PkgId,
     Str2 = <<"\", \"message\":[">>,
     Str3 = <<"]}">>,
     Str4 = <<Str1/binary, Topic/binary, Str2/binary, Payload/binary, Str3/binary>>,
-    ekaf:produce_async(<<"kafka">>, Str4),	
+	{ok, KafkaTopic} = application:get_env(emqttd_kafka_bridge, values),
+    ProduceTopic = proplists:get_value(kafka_producer_topic, KafkaTopic),
+    ekaf:produce_async(ProduceTopic, Str4),	
     {ok, Message}.
 
 
@@ -111,9 +113,11 @@ on_message_acked(ClientId, Username, Message, _Env) ->
     {ok, Message}.
 
 ekaf_init(_Env) ->
-    
-    application:set_env(ekaf, ekaf_partition_strategy, strict_round_robin),
-    application:set_env(ekaf, ekaf_bootstrap_broker, {"172.31.37.158", 9092}),
+    {ok, Values} = application:get_env(emqttd_kafka_bridge, values),
+    BootstrapBroker = proplists:get_value(bootstrap_broker, Values),
+    PartitionStrategy= proplists:get_value(partition_strategy, Values),
+    application:set_env(ekaf, ekaf_partition_strategy, PartitionStrategy),
+    application:set_env(ekaf, ekaf_bootstrap_broker, BootstrapBroker),
     {ok, _} = application:ensure_all_started(ekaf),
     io:format("Initialized ekaf with ~p~n", [{"localhost", 9092}]).
 

@@ -14,21 +14,15 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqttd_kafka_bridge_app).
+-module(emq_cli_emqttd_kafka_bridge).
 
--behaviour(application).
+-include_lib("emqttd/include/emqttd_cli.hrl").
 
-%% Application callbacks
--export([start/2, stop/1]).
+-export([cmd/1]).
 
-start(_StartType, _StartArgs) ->
-    {ok, Sup} = emqttd_kafka_bridge_sup:start_link(),
-    ok = emqttd_access_control:register_mod(auth, emq_auth_emqttd_kafka_bridge, []),
-    ok = emqttd_access_control:register_mod(acl, emq_acl_emqttd_kafka_bridge, []),
-    emqttd_kafka_bridge:load(application:get_all_env()),
-    {ok, Sup}.
+cmd(["arg1", "arg2"]) ->
+    ?PRINT_MSG("ok");
 
-stop(_State) ->
-    ok = emqttd_access_control:unregister_mod(auth, emq_auth_emqttd_kafka_bridge),
-    ok = emqttd_access_control:unregister_mod(acl, emq_acl_emqttd_kafka_bridge),
-    emqttd_kafka_bridge:unload().
+cmd(_) ->
+    ?USAGE([{"cmd arg1 arg2",  "cmd demo"}]).
+
