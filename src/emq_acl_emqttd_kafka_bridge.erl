@@ -14,21 +14,22 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqttd_kafka_bridge_app).
+-module(emq_acl_emqttd_kafka_bridge).
 
--behaviour(application).
+-include_lib("emqttd/include/emqttd.hrl").
 
-%% Application callbacks
--export([start/2, stop/1]).
+%% ACL callbacks
+-export([init/1, check_acl/2, reload_acl/1, description/0]).
 
-start(_StartType, _StartArgs) ->
-    {ok, Sup} = emqttd_kafka_bridge_sup:start_link(),
-    ok = emqttd_access_control:register_mod(auth, emq_auth_emqttd_kafka_bridge, []),
-    ok = emqttd_access_control:register_mod(acl, emq_acl_emqttd_kafka_bridge, []),
-    emqttd_kafka_bridge:load(application:get_all_env()),
-    {ok, Sup}.
+init(Opts) ->
+    {ok, Opts}.
 
-stop(_State) ->
-    ok = emqttd_access_control:unregister_mod(auth, emq_auth_emqttd_kafka_bridge),
-    ok = emqttd_access_control:unregister_mod(acl, emq_acl_emqttd_kafka_bridge),
-    emqttd_kafka_bridge:unload().
+check_acl({Client, PubSub, Topic}, _Opts) ->
+    io:format("ACL Demo: ~p ~p ~p~n", [Client, PubSub, Topic]),
+    allow.
+
+reload_acl(_Opts) ->
+    ok.
+
+description() -> "ACL Demo Module".
+ 
