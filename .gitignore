@@ -5,9 +5,8 @@ deps
 *.plt
 erl_crash.dump
 ebin
-rel/emqttd_kafka_bridge_project
+rel/example_project
 .concrete/DEV_MODE
 .rebar
 .erlang.mk/
-emqttd_kafka_bridge.d
-data/
+emqttd_plugin_template.d
