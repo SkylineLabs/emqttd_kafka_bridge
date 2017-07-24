@@ -4,26 +4,59 @@ emqttd_kafka_plugin
 
 This is a plugin for the EMQ broker that sends all messages received by the broker to kafka.
 
-Plugin Config
+Build the EMQ broker
 -------------
 
-Each plugin should have a 'etc/{plugin_name}.conf|config' file to store application config.
-
-Authentication and ACL
+1. clone emq-relx project
+```	
+git clone https://github.com/emqtt/emq-relx.git
+```
+2. Add DEPS of the plugin in the Makefile
+```
+DEPS += emqttd_kafka_bridge
+dep_emqttd_kafka_bridge = git https://github.com/ReshulDani/emqttd_kafka_bridge.git master
+```
+3. Add load plugin in relx.config
+```
+{emqttd_kafka_bridge, load},
+ ```
+4. Build
+```
+cd emq-relx && make
+```  
+Configuration
 ----------------------
+You will have to edit the configurations of the bridge to set the kafka Ip address and port.
 
+Edit the file emq-relx/deps/emqttd_kafka_bridge/etc/emqttd_kafka_bridge.config
 ```
-emqttd_access_control:register_mod(auth, ?MODULE, Env).
-emqttd_access_control:register_mod(acl, ?MODULE, Env).
+[
+  {emqttd_kafka_bridge, [{values, [
+	  %%edit this to address and port on which kafka is running
+      {bootstrap_broker, {"172.31.29.115", 9092} },
+	  %% partition strategies can be strict_round_robin or random
+      {partition_strategy, strict_round_robin},
+      %% Change the topic to produce to kafka. Default topic is "Kafka". It is on this topic that the messages will be sent from the broker to a kafka consumer
+	  {kafka_producer_topic, <<"kafka">>}
+    ]}]}
+].
 ```
 
-Plugin and Hooks
+Start the EMQ broker and load the plugin 
 -----------------
+1) cd emq-relx/_rel/emqttd
+2) ./bin/emqttd start
+3) ./bin/emqttd_ctl plugins load emqttd_kafka_bridge
 
-[Plugin Design](http://docs.emqtt.com/en/latest/design.html#plugin-design)
+Test
+-----------------
+Send an MQTT message on a random topic from an MQTT client to you EMQ broker.
 
-[Hooks Design](http://docs.emqtt.com/en/latest/design.html#hooks-design)
+The following should be received by your kafka consumer :
 
+  {"topic":"yourtopic", "message":[yourmessage]}
+This is the format in which kafka will receive the MQTT messages
+  
 License
 -------
 
