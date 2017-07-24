@@ -4,6 +4,9 @@ emqttd_kafka_plugin
 
 This is a plugin for the EMQ broker that sends all messages received by the broker to kafka.
 
+**This project is a sub-module of ConnectX IoT platform.**
+**Refer https://github.com/SkylineLabs/ConnectX-IoT-platform for more details**
+
 Build the EMQ broker
 -------------
 
@@ -63,6 +66,4 @@ License
 Apache License Version 2.0
 
 
-**This project is a sub-module of ConnectX IoT platform.**
-**Refer https://github.com/SkylineLabs/ConnectX-IoT-platform for more details**
 
