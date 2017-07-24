@@ -14,7 +14,7 @@ git clone https://github.com/emqtt/emq-relx.git
 2. Add DEPS of the plugin in the Makefile
 ```
 DEPS += emqttd_kafka_bridge
-dep_emqttd_kafka_bridge = git https://github.com/ReshulDani/emqttd_kafka_bridge.git master
+dep_emqttd_kafka_bridge = git https://github.com/SkylineLabs/emqttd_kafka_bridge.git master
 ```
 3. Add load plugin in relx.config
 ```
