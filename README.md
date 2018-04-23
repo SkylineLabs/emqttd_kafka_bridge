@@ -59,6 +59,9 @@ The following should be received by your kafka consumer :
 
   {"topic":"yourtopic", "message":[yourmessage]}
 This is the format in which kafka will receive the MQTT messages
+
+
+If Kafka consumer shows no messages even after publishing to EMQTT - ACL makes the plugin fail, so please remove all the ACL related code to ensure it runs properly. We will soon push the updated (Working) code to the repository. 
   
 License
 -------
